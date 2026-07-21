@@ -3,15 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Satish Meena - Premium Feed</title>
+    <title>Satish Meena - Premium Instagram</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #000; color: #fff; padding-bottom: 70px; }
         
-        /* Header */
+        /* Auth Screen (Login / Signup) */
+        #authScreen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #000; padding: 20px; text-align: center; position: fixed; top: 0; left: 0; width: 100%; z-index: 2000; }
+        .auth-box { width: 100%; max-width: 350px; border: 1px solid #262626; padding: 30px 20px; border-radius: 8px; background: #000; }
+        .auth-box h1 { font-family: cursive; margin-bottom: 25px; font-size: 32px; color: #fff; }
+        .auth-box input { width: 100%; padding: 12px; margin-bottom: 10px; background: #121212; border: 1px solid #333; color: #fff; border-radius: 5px; outline: none; box-sizing: border-box; }
+        .auth-box button { width: 100%; padding: 10px; background: #0095f6; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 15px; }
+        .auth-switch { margin-top: 15px; font-size: 14px; color: #aaa; cursor: pointer; }
+        .auth-switch span { color: #0095f6; font-weight: bold; }
+
+        /* Main App Header */
         .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; position: sticky; top: 0; background-color: #000; z-index: 100; border-bottom: 1px solid #262626; }
-        .header .logo { display: flex; flex-direction: column; }
-        .header h1 { margin: 0; font-size: 22px; font-weight: bold; }
+        .header .logo h1 { margin: 0; font-size: 22px; font-weight: bold; }
         .header span.badge { font-size: 10px; color: #0095f6; font-weight: bold; letter-spacing: 1px; }
         .header .icons i { font-size: 22px; margin-left: 15px; cursor: pointer; }
 
@@ -47,8 +55,8 @@
         .add-comment-box input { flex: 1; background: #121212; border: 1px solid #333; color: white; padding: 8px; border-radius: 6px; outline: none; font-size: 13px; }
         .add-comment-box button { background: none; border: none; color: #0095f6; font-weight: bold; cursor: pointer; }
 
-        /* Modal for Creating Post/Story */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; }
+        /* Modals */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 3000; align-items: center; justify-content: center; }
         .modal-content { background: #1c1c1c; padding: 20px; border-radius: 12px; width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 12px; }
         .modal-content h3 { margin: 0 0 10px 0; color: #fff; }
         .modal-content input { padding: 10px; background: #262626; border: 1px solid #444; color: #fff; border-radius: 6px; outline: none; }
@@ -60,35 +68,45 @@
         /* Bottom Nav */
         .bottom-nav { display: flex; justify-content: space-around; align-items: center; padding: 12px 0; position: fixed; bottom: 0; width: 100%; background-color: #000; border-top: 1px solid #262626; font-size: 22px; z-index: 100; }
         .bottom-nav i { cursor: pointer; }
-
         .liked { color: #ff3040 !important; }
     </style>
 </head>
 <body>
 
-    <!-- Header -->
-    <div class="header">
-        <div class="logo">
+    <!-- AUTH SCREEN (LOGIN / SIGNUP) -->
+    <div id="authScreen">
+        <div class="auth-box">
             <h1>Satish Meena</h1>
-            <span class="badge">PREMIUM EDITION</span>
-        </div>
-        <div class="icons">
-            <i class="fa-regular fa-square-plus" onclick="openPostModal()"></i>
-            <i class="fa-regular fa-heart"></i>
-            <i class="fa-brands fa-facebook-messenger"></i>
-        </div>
-    </div>
-
-    <!-- Stories Container -->
-    <div class="stories" id="storiesContainer">
-        <div class="story" onclick="openStoryModal()">
-            <img src="https://picsum.photos/100/100?random=1" alt="Add Story">
-            <span>Your Story</span>
+            <div id="formContainer">
+                <!-- Login Form by default -->
+                <input type="text" id="authUsername" placeholder="Username">
+                <input type="password" id="authPassword" placeholder="Password">
+                <button onclick="handleAuth()">Log In</button>
+                <div class="auth-switch" onclick="switchMode()">Don't have an account? <span>Sign up</span></div>
+            </div>
         </div>
     </div>
 
-    <!-- Feed Container -->
-    <div id="feedContainer"></div>
+    <!-- MAIN APP SCREEN -->
+    <div id="mainApp" style="display: none;">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <h1>Satish Meena</h1>
+                <span class="badge">PREMIUM EDITION</span>
+            </div>
+            <div class="icons">
+                <i class="fa-regular fa-square-plus" onclick="openPostModal()" title="Create Post"></i>
+                <i class="fa-solid fa-right-from-bracket" onclick="logout()" title="Log Out"></i>
+            </div>
+        </div>
+
+        <!-- Stories Container -->
+        <div class="stories" id="storiesContainer"></div>
+
+        <!-- Feed Container -->
+        <div id="feedContainer"></div>
+    </div>
 
     <!-- Create Post Modal -->
     <div class="modal" id="postModal">
@@ -103,30 +121,81 @@
         </div>
     </div>
 
-    <!-- Create Story Modal -->
-    <div class="modal" id="storyModal">
-        <div class="modal-content">
-            <h3>Add New Story</h3>
-            <input type="text" id="storyNameInput" placeholder="Your Name">
-            <input type="text" id="storyImageInput" placeholder="Image URL">
-            <div class="modal-btns">
-                <button class="btn-cancel" onclick="closeStoryModal()">Cancel</button>
-                <button class="btn-post" onclick="addNewStory()">Add Story</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bottom Navigation -->
-    <div class="bottom-nav">
-        <i class="fa-solid fa-house" style="color: #fff;"></i>
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <i class="fa-regular fa-square-plus" onclick="openPostModal()"></i>
-        <i class="fa-solid fa-clapperboard"></i>
-        <i class="fa-regular fa-user"></i>
-    </div>
-
     <script>
-        // Default Data agar localStorage khali ho
+        let isSignupMode = false;
+        let currentUser = localStorage.getItem('satish_current_user');
+
+        // Check if user is already logged in
+        if (currentUser) {
+            document.getElementById('authScreen').style.display = 'none';
+            document.getElementById('mainApp').style.display = 'block';
+        }
+
+        // Switch between Login and Signup form UI
+        function switchMode() {
+            isSignupMode = !isSignupMode;
+            const container = document.getElementById('formContainer');
+            if (isSignupMode) {
+                container.innerHTML = `
+                    <input type="text" id="authUsername" placeholder="Choose Username">
+                    <input type="password" id="authPassword" placeholder="Create Password">
+                    <button onclick="handleAuth()">Sign Up</button>
+                    <div class="auth-switch" onclick="switchMode()">Have an account? <span>Log In</span></div>
+                `;
+            } else {
+                container.innerHTML = `
+                    <input type="text" id="authUsername" placeholder="Username">
+                    <input type="password" id="authPassword" placeholder="Password">
+                    <button onclick="handleAuth()">Log In</button>
+                    <div class="auth-switch" onclick="switchMode()">Don't have an account? <span>Sign up</span></div>
+                `;
+            }
+        }
+
+        // Handle Login & Signup logic
+        function handleAuth() {
+            const username = document.getElementById('authUsername').value.trim();
+            const password = document.getElementById('authPassword').value.trim();
+
+            if(!username || !password) {
+                alert("Please fill all fields!");
+                return;
+            }
+
+            let users = JSON.parse(localStorage.getItem('satish_users')) || [];
+
+            if (isSignupMode) {
+                // Check if user already exists
+                let existing = users.find(u => u.username === username);
+                if(existing) {
+                    alert("Username already exists! Try another.");
+                    return;
+                }
+                users.push({ username, password });
+                localStorage.setItem('satish_users', JSON.stringify(users));
+                alert("Account created successfully! Please log in.");
+                switchMode();
+            } else {
+                // Login check
+                let validUser = users.find(u => u.username === username && u.password === password);
+                // Allow default or newly signed up users
+                if (validUser || (username === "satish" && password === "1234")) {
+                    localStorage.setItem('satish_current_user', username);
+                    document.getElementById('authScreen').style.display = 'none';
+                    document.getElementById('mainApp').style.display = 'block';
+                    renderApp();
+                } else {
+                    alert("Invalid Username or Password! (Hint: Sign up first)");
+                }
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('satish_current_user');
+            location.reload();
+        }
+
+        // App Data Storage
         let posts = JSON.parse(localStorage.getItem('satish_posts')) || [
             {
                 username: "satish_meena_official",
@@ -139,7 +208,7 @@
             }
         ];
 
-        let stories = JSON.parse(localStorage.getItem('satish_stories')) || [
+        let stories = [
             { name: "Vkeel", pic: "https://picsum.photos/100/100?random=2" },
             { name: "Awani", pic: "https://picsum.photos/100/100?random=3" },
             { name: "Naitik", pic: "https://picsum.photos/100/100?random=4" },
@@ -148,12 +217,12 @@
 
         function saveData() {
             localStorage.setItem('satish_posts', JSON.stringify(posts));
-            localStorage.setItem('satish_stories', JSON.stringify(stories));
         }
 
         function renderApp() {
             // Render Stories
-            let storiesHTML = `<div class="story" onclick="openStoryModal()"><img src="https://picsum.photos/100/100?random=1" alt="Add"><span>Your Story</span></div>`;
+            let activeUser = localStorage.getItem('satish_current_user') || "You";
+            let storiesHTML = `<div class="story"><img src="https://picsum.photos/100/100?random=1" alt="Add"><span>${activeUser}</span></div>`;
             stories.forEach(s => {
                 storiesHTML += `<div class="story"><img src="${s.pic}" alt=""><span>${s.name}</span></div>`;
             });
@@ -198,7 +267,6 @@
             document.getElementById('feedContainer').innerHTML = feedHTML;
         }
 
-        // Like Function
         function toggleLike(index) {
             if (posts[index].isLiked) {
                 posts[index].isLiked = false;
@@ -211,7 +279,6 @@
             renderApp();
         }
 
-        // Double Tap Like
         function doubleTapLike(index) {
             if (!posts[index].isLiked) {
                 posts[index].isLiked = true;
@@ -225,17 +292,16 @@
             setTimeout(() => { heart.classList.remove('animate'); }, 800);
         }
 
-        // Add Comment
         function addComment(index) {
             const input = document.getElementById(`comment-input-${index}`);
+            let activeUser = localStorage.getItem('satish_current_user') || "user";
             if (input.value.trim() !== "") {
-                posts[index].comments.push(input.value);
+                posts[index].comments.push(`${activeUser}: ${input.value}`);
                 saveData();
                 renderApp();
             }
         }
 
-        // Follow Toggle
         function toggleFollow(btn) {
             if (btn.innerText === "Follow") {
                 btn.innerText = "Following";
@@ -246,20 +312,17 @@
             }
         }
 
-        // Modals control
         function openPostModal() { document.getElementById('postModal').style.display = 'flex'; }
         function closePostModal() { document.getElementById('postModal').style.display = 'none'; }
-        function openStoryModal() { document.getElementById('storyModal').style.display = 'flex'; }
-        function closeStoryModal() { document.getElementById('storyModal').style.display = 'none'; }
 
-        // Add New Post Action
         function addNewPost() {
-            const img = document.getElementById('postImageInput').value;
+            c;
             const caption = document.getElementById('postCaptionInput').value;
+            let activeUser = localStorage.getItem('satish_current_user') || "satish_meena";
             if(img) {
                 posts.unshift({
-                    username: "satish_meena_official",
-                    userPic: "https://picsum.photos/50/50?random=10",
+                    username: activeUser,
+                    userPic: "https://picsum.photos/50/50?random=12",
                     media: img,
                     caption: caption || "New premium post ✨",
                     likes: 1,
@@ -274,22 +337,10 @@
             }
         }
 
-        // Add New Story Action
-        function addNewStory() {
-            const name = document.getElementById('storyNameInput').value;
-            const pic = document.getElementById('storyImageInput').value;
-            if(name && pic) {
-                stories.push({ name: name, pic: pic });
-                saveData();
-                renderApp();
-                closeStoryModal();
-                document.getElementById('storyNameInput').value = '';
-                document.getElementById('storyImageInput').value = '';
-            }
+        // Run render if already logged in on load
+        if(currentUser) {
+            renderApp();
         }
-
-        // Initial Load
-        renderApp();
     </script>
 </body>
 </html>
