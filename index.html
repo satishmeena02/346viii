@@ -1,3 +1,28 @@
-<div class="post-media">
-    <video src="myvideo.mp4" loop onclick="playPauseVideo(this)"></video>
+<!-- Comment Section -->
+<div class="comment-section" style="padding: 10px 15px;">
+    <!-- Yahan purane comments dikhenge -->
+    <div id="commentList" style="font-size: 14px; margin-bottom: 8px; color: #ddd;"></div>
+
+    <!-- Type karne ka box aur Post button -->
+    <div style="display: flex; gap: 5px;">
+        <input type="text" id="commentInput" placeholder="Add a comment..." style="flex: 1; background: #121212; border: 1px solid #333; color: white; padding: 8px; border-radius: 5px; outline: none;">
+        <button onclick="postComment()" style="background: #0095f6; color: white; border: none; padding: 8px 15px; border-radius: 5px; font-weight: bold; cursor: pointer;">Post</button>
+    </div>
 </div>
+
+<script>
+    // Comment add karne ka JavaScript function
+    function postComment() {
+        const input = document.getElementById('commentInput');
+        const list = document.getElementById('commentList');
+        
+        if (input.value.trim() !== "") {
+            const commentDiv = document.createElement('div');
+            commentDiv.style.margin = "4px 0";
+            commentDiv.innerHTML = `<strong style="color: #fff;">visitor:</strong> ${input.value}`;
+            
+            list.appendChild(commentDiv);
+            input.value = ""; // Box ko khali karne ke liye
+        }
+    }
+</script>
