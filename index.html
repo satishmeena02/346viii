@@ -1,1 +1,177 @@
-<img src="mypic.jpg" alt="Story">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Gallery V2</title>
+    <!-- Icons ke liye FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #000; color: #fff; padding-bottom: 60px; }
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; position: sticky; top: 0; background-color: #000; z-index: 100; border-bottom: 1px solid #262626; }
+        .header h1 { margin: 0; font-size: 24px; font-style: italic; }
+        .header .icons i { font-size: 22px; margin-left: 15px; }
+
+        /* Stories */
+        .stories { display: flex; padding: 15px 10px; gap: 15px; overflow-x: auto; border-bottom: 1px solid #262626; scrollbar-width: none; }
+        .story { display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 12px; }
+        .story img { width: 65px; height: 65px; border-radius: 50%; border: 3px solid transparent; background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) border-box; -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0); mask-composite: exclude; padding: 2px; object-fit: cover; }
+
+        /* Posts */
+        .post { margin-bottom: 15px; border-bottom: 1px solid #262626; padding-bottom: 10px; }
+        .post-header { display: flex; align-items: center; padding: 10px 15px; gap: 10px; }
+        .post-header img { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; }
+        .post-header span { font-weight: bold; font-size: 14px; }
+        
+        /* Follow Button Style */
+        .follow-btn { margin-left: auto; background-color: #0095f6; color: white; border: none; border-radius: 8px; padding: 6px 16px; font-weight: bold; font-size: 14px; cursor: pointer; }
+        .follow-btn.following { background-color: #262626; color: white; }
+
+        .post-media { position: relative; width: 100%; max-height: 600px; background: #111; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .post-media img, .post-media video { width: 100%; height: auto; object-fit: cover; }
+
+        /* Heart Animation Icon */
+        .big-heart { position: absolute; color: white; font-size: 80px; opacity: 0; transform: scale(0); transition: all 0.3s ease-out; }
+        .big-heart.animate { opacity: 0.8; transform: scale(1.2); }
+
+        .post-actions { padding: 10px 15px; display: flex; justify-content: space-between; font-size: 24px; }
+        .post-actions .left i { margin-right: 15px; cursor: pointer; }
+        .post-likes { padding: 0 15px; font-weight: bold; font-size: 14px; }
+        .post-caption { padding: 5px 15px; font-size: 14px; }
+        .post-caption span { color: #0095f6; } /* Hashtag color */
+
+        .bottom-nav { display: flex; justify-content: space-around; align-items: center; padding: 15px 0; position: fixed; bottom: 0; width: 100%; background-color: #000; border-top: 1px solid #262626; font-size: 24px; z-index: 100; }
+        .liked { color: #ff3040 !important; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>No Signal</h1>
+        <div class="icons">
+            <i class="fa-regular fa-heart"></i>
+            <i class="fa-brands fa-facebook-messenger"></i>
+        </div>
+    </div>
+
+    <!-- Stories -->
+    <div class="stories">
+        <div class="story"><img src="https://picsum.photos/100/100?random=1" alt="Story"><span>Your Story</span></div>
+        <div class="story"><img src="https://picsum.photos/100/100?random=2" alt="Story"><span>Vkeel</span></div>
+        <div class="story"><img src="https://picsum.photos/100/100?random=3" alt="Story"><span>Awani</span></div>
+        <div class="story"><img src="https://picsum.photos/100/100?random=4" alt="Story"><span>Naitik</span></div>
+        <div class="story"><img src="https://picsum.photos/100/100?random=5" alt="Story"><span>Hardik</span></div>
+    </div>
+
+    <!-- Post 1: Video Post -->
+    <div class="post">
+        <div class="post-header">
+            <img src="https://picsum.photos/50/50?random=6" alt="Profile">
+            <span>no_signal_boy</span>
+            <button class="follow-btn" onclick="toggleFollow(this)">Follow</button>
+        </div>
+        
+        <!-- Video dalne ka section -->
+        <div class="post-media">
+            <video src="https://www.w3schools.com/html/mov_bbb.mp4" loop onclick="playPauseVideo(this)"></video>
+        </div>
+        
+        <div class="post-actions">
+            <div class="left">
+                <i class="fa-regular fa-heart" onclick="toggleLike(this)"></i>
+                <i class="fa-regular fa-comment"></i>
+                <i class="fa-regular fa-paper-plane"></i>
+            </div>
+            <div class="right"><i class="fa-regular fa-bookmark"></i></div>
+        </div>
+        <div class="post-likes">8,942 likes</div>
+        <div class="post-caption">
+            <strong>no_signal_boy</strong> Naya track aa raha hai jaldi! 🚀 <span>#music #hiphop</span>
+        </div>
+    </div>
+
+    <!-- Post 2: Photo Post with Double Tap -->
+    <div class="post">
+        <div class="post-header">
+            <img src="https://picsum.photos/50/50?random=8" alt="Profile">
+            <span>kittu_07</span>
+            <button class="follow-btn" onclick="toggleFollow(this)">Follow</button>
+        </div>
+        
+        <!-- Double tap to like yahan kaam karega -->
+        <div class="post-media" ondblclick="doubleTapLike(this)">
+            <img src="https://picsum.photos/600/600?random=9" alt="Post">
+            <i class="fa-solid fa-heart big-heart"></i>
+        </div>
+        
+        <div class="post-actions">
+            <div class="left">
+                <i class="fa-regular fa-heart heart-icon" onclick="toggleLike(this)"></i>
+                <i class="fa-regular fa-comment"></i>
+                <i class="fa-regular fa-paper-plane"></i>
+            </div>
+            <div class="right"><i class="fa-regular fa-bookmark"></i></div>
+        </div>
+        <div class="post-likes">1,204 likes</div>
+        <div class="post-caption">
+            <strong>kittu_07</strong> Studio vibes 🎧 <span>#studio</span>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <i class="fa-solid fa-house"></i>
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <i class="fa-regular fa-square-plus"></i>
+        <i class="fa-solid fa-clapperboard"></i>
+        <i class="fa-regular fa-user"></i>
+    </div>
+
+    <!-- JavaScript - Features ko kaam karane ke liye -->
+    <script>
+        // 1. Follow Button Script
+        function toggleFollow(btn) {
+            if (btn.innerText === "Follow") {
+                btn.innerText = "Following";
+                btn.classList.add("following");
+            } else {
+                btn.innerText = "Follow";
+                btn.classList.remove("following");
+            }
+        }
+
+        // 2. Like Button Toggle (Heart red karna)
+        function toggleLike(element) {
+            element.classList.toggle('fa-regular');
+            element.classList.toggle('fa-solid');
+            element.classList.toggle('liked');
+        }
+
+        // 3. Double Tap to Like Script
+        function doubleTapLike(element) {
+            const bigHeart = element.querySelector('.big-heart');
+            const smallHeart = element.parentElement.querySelector('.heart-icon');
+            
+            // Big heart animation
+            bigHeart.classList.add('animate');
+            setTimeout(() => { bigHeart.classList.remove('animate'); }, 800);
+
+            // Niche wale chhote heart ko red karna agar wo red nahi hai
+            if (!smallHeart.classList.contains('liked')) {
+                smallHeart.classList.remove('fa-regular');
+                smallHeart.classList.add('fa-solid');
+                smallHeart.classList.add('liked');
+            }
+        }
+
+        // 4. Video Play/Pause Script
+        function playPauseVideo(video) {
+            if (video.paused) {
+                video.play();
+            } else {
+                video.pause();
+            }
+        }
+    </script>
+</body>
+              </html>
+              
