@@ -1224,3 +1224,371 @@
                 }
             });
             docume
+            <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satish Meena - Premium Instagram</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #000; color: #fff; padding-bottom: 70px; }
+        
+        /* Header */
+        .header { display: flex; justify-content: space-between; align-items: center; padding: 12px 15px; position: sticky; top: 0; background-color: #000; z-index: 100; border-bottom: 1px solid #262626; }
+        .header .logo h1 { margin: 0; font-size: 20px; font-weight: bold; }
+        .header span.badge { font-size: 9px; color: #0095f6; font-weight: bold; letter-spacing: 1px; display: block; }
+        .header-right { display: flex; align-items: center; gap: 12px; }
+        .login-top-btn { background: #0095f6; color: white; border: none; padding: 6px 14px; border-radius: 6px; font-weight: bold; font-size: 13px; cursor: pointer; }
+        .user-badge-top { font-size: 13px; color: #ff9800; font-weight: bold; }
+
+        /* Running Marquee Banner */
+        .marquee-container { background: linear-gradient(90deg, #833ab4, #fd1d1d, #fcb045); color: white; padding: 8px 0; overflow: hidden; white-space: nowrap; font-weight: bold; font-size: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .marquee-text { display: inline-block; animation: marquee 25s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(100%); } 100% { transform: translateX(-100%); } }
+
+        /* Reel Downloader Box */
+        .downloader-box { background: #121212; border: 1px solid #333; margin: 15px; padding: 15px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.8); }
+        .downloader-box h3 { margin: 0 0 8px 0; color: #ff9800; font-size: 16px; }
+        .downloader-box p { font-size: 12px; color: #aaa; margin-bottom: 10px; }
+        .downloader-input-group { display: flex; gap: 8px; }
+        .downloader-input-group input { flex: 1; padding: 10px; background: #1c1c1c; border: 1px solid #444; color: white; border-radius: 6px; outline: none; font-size: 13px; }
+        .downloader-input-group button { background: #0095f6; color: white; border: none; padding: 10px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 13px; }
+        #downloadResult { margin-top: 10px; font-size: 13px; color: #4CAF50; }
+
+        /* Stories */
+        .stories { display: flex; padding: 15px 10px; gap: 15px; overflow-x: auto; border-bottom: 1px solid #262626; scrollbar-width: none; }
+        .story { display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 12px; cursor: pointer; flex-shrink: 0; }
+        .story img { width: 65px; height: 65px; border-radius: 50%; border: 3px solid transparent; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888) border-box; -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0); mask-composite: exclude; padding: 2px; object-fit: cover; }
+
+        /* Views */
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+
+        /* Posts */
+        .post { margin-bottom: 20px; border-bottom: 1px solid #262626; padding-bottom: 15px; }
+        .post-header { display: flex; align-items: center; padding: 10px 15px; gap: 10px; }
+        .post-header img { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; }
+        .post-header span { font-weight: bold; font-size: 14px; }
+        .follow-btn { margin-left: auto; background-color: #0095f6; color: white; border: none; border-radius: 6px; padding: 5px 14px; font-weight: bold; font-size: 13px; cursor: pointer; }
+        .follow-btn.following { background-color: #262626; }
+
+        .post-media { position: relative; width: 100%; max-height: 550px; background: #111; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .post-media img, .post-media video { width: 100%; max-height: 550px; object-fit: cover; }
+        
+        .big-heart { position: absolute; color: white; font-size: 80px; opacity: 0; transform: scale(0); transition: all 0.3s ease-out; pointer-events: none; }
+        .big-heart.animate { opacity: 0.9; transform: scale(1.2); }
+
+        .post-actions { padding: 10px 15px; display: flex; justify-content: space-between; font-size: 24px; }
+        .post-actions .left i { margin-right: 15px; cursor: pointer; }
+        .post-likes { padding: 0 15px; font-weight: bold; font-size: 14px; margin-bottom: 5px; }
+        .post-caption { padding: 0 15px; font-size: 14px; margin-bottom: 8px; }
+        .post-caption span { color: #0095f6; }
+
+        /* Comments */
+        .comments-section { padding: 0 15px; font-size: 13px; max-height: 100px; overflow-y: auto; }
+        .comment-item { margin-bottom: 3px; }
+        .add-comment-box { display: flex; padding: 8px 15px; gap: 10px; margin-top: 8px; }
+        .add-comment-box input { flex: 1; background: #121212; border: 1px solid #333; color: white; padding: 8px; border-radius: 6px; outline: none; font-size: 13px; }
+        .add-comment-box button { background: none; border: none; color: #0095f6; font-weight: bold; cursor: pointer; }
+
+        /* Profile View */
+        .profile-header { display: flex; align-items: center; padding: 20px; gap: 20px; border-bottom: 1px solid #262626; }
+        .profile-header img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #ff9800; }
+        .profile-info h2 { margin: 0 0 5px 0; font-size: 18px; }
+        .profile-info p { margin: 0; color: #aaa; font-size: 13px; }
+        .profile-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
+        .profile-grid img, .profile-grid video { width: 100%; height: 120px; object-fit: cover; }
+
+        /* Modals */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 3000; align-items: center; justify-content: center; }
+        .modal-content { background: #1c1c1c; padding: 20px; border-radius: 12px; width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 12px; box-sizing: border-box; }
+        .modal-content h3 { margin: 0 0 10px 0; color: #fff; }
+        .modal-content input, .modal-content select { padding: 10px; background: #262626; border: 1px solid #444; color: #fff; border-radius: 6px; outline: none; width: 100%; box-sizing: border-box; }
+        .modal-btns { display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; }
+        .modal-btns button { padding: 8px 16px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
+        .btn-cancel { background: #333; color: #fff; }
+        .btn-post { background: #0095f6; color: #fff; }
+
+        /* Bottom Nav */
+        .bottom-nav { display: flex; justify-content: space-around; align-items: center; padding: 12px 0; position: fixed; bottom: 0; width: 100%; background-color: #000; border-top: 1px solid #262626; font-size: 22px; z-index: 100; }
+        .bottom-nav i { cursor: pointer; color: #888; }
+        .bottom-nav i.active-tab { color: #fff; }
+        .liked { color: #ff3040 !important; }
+    </style>
+</head>
+<body>
+
+    <!-- MAIN APP SCREEN (Always open by default) -->
+    <div id="mainApp">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <h1>Satish Meena</h1>
+                <span class="badge">PREMIUM EDITION</span>
+            </div>
+            <div class="header-right">
+                <span id="topUserDisplay" class="user-badge-top"></span>
+                <button class="login-top-btn" id="topAuthBtn" onclick="openAuthModal()">Log In</button>
+            </div>
+        </div>
+
+        <!-- RUNNING MARQUEE BANNER -->
+        <div class="marquee-container">
+            <div class="marquee-text">
+                🌟 My Name: Satish Meena &nbsp;|&nbsp; Nick Name: mahi sulaniya &nbsp;|&nbsp; Social Name: no signal &nbsp;|&nbsp; Username: satish_sulaniya &nbsp;|&nbsp; Besties: 346viii &nbsp;|&nbsp; Hashtag: #346viii &nbsp;|&nbsp; Insta Name: Naitik_mewal &nbsp;|&nbsp; Older Name: prakash meena 🌟
+            </div>
+        </div>
+
+        <!-- INSTAGRAM REEL DOWNLOADER BOX -->
+        <div class="downloader-box">
+            <h3>📥 Instagram Reel Downloader</h3>
+            <p>Paste any public Instagram Reel or Post link below to download:</p>
+            <div class="downloader-input-group">
+                <input type="text" id="igLinkInput" placeholder="https://www.instagram.com/reel/...">
+                <button onclick="downloadIgReel()">Fetch</button>
+            </div>
+            <div id="downloadResult"></div>
+        </div>
+
+        <!-- HOME FEED VIEW -->
+        <div id="homeView" class="view-section active">
+            <div class="stories" id="storiesContainer"></div>
+            <div id="feedContainer"></div>
+        </div>
+
+        <!-- PROFILE VIEW -->
+        <div id="profileView" class="view-section">
+            <div class="profile-header">
+                <img id="profileUserPic" src="" alt="Profile">
+                <div class="profile-info">
+                    <h2 id="profileUsername"></h2>
+                    <p id="profilePhone"></p>
+                </div>
+            </div>
+            <div style="padding: 10px 15px; font-weight: bold; font-size: 14px;">My Posts & Reels</div>
+            <div class="profile-grid" id="profileGrid"></div>
+        </div>
+
+        <!-- BOTTOM NAVIGATION -->
+        <div class="bottom-nav">
+            <i class="fa-solid fa-house active-tab" id="navHome" onclick="switchTab('home')"></i>
+            <i class="fa-solid fa-magnifying-glass" onclick="switchTab('home')"></i>
+            <i class="fa-regular fa-square-plus" onclick="checkAuthAndOpenPost()"></i>
+            <i class="fa-solid fa-clapperboard" onclick="switchTab('home')"></i>
+            <i class="fa-regular fa-user" id="navProfile" onclick="checkAuthAndOpenProfile()"></i>
+        </div>
+    </div>
+
+    <!-- AUTH MODAL (Login / Signup Popup) -->
+    <div class="modal" id="authModal">
+        <div class="modal-content">
+            <h3 id="authModalTitle">Log In</h3>
+            <div id="signupExtraFields" style="display:none;">
+                <input type="text" id="signName" placeholder="Full Name">
+                <input type="text" id="signPhone" placeholder="Mobile Number">
+            </div>
+            <input type="text" id="authUsernameInput" placeholder="Username or Phone">
+            <input type="password" id="authPasswordInput" placeholder="Password">
+            <div class="modal-btns">
+                <button class="btn-cancel" onclick="closeAuthModal()">Cancel</button>
+                <button class="btn-post" id="authSubmitBtn" onclick="processLogin()">Log In</button>
+            </div>
+            <div class="auth-switch" style="text-align:center; font-size:13px; color:#aaa; margin-top:5px; cursor:pointer;" onclick="switchAuthModalMode()">
+                <span id="authSwitchText">Don't have an account? Sign up</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- POST MODAL -->
+    <div class="modal" id="postModal">
+        <div class="modal-content">
+            <h3>Upload from Gallery</h3>
+            <select id="postTypeInput">
+                <option value="image">Photo Post</option>
+                <option value="reel">Reel (Video)</option>
+            </select>
+            <input type="file" id="postMediaFile" accept="image/*,video/*" style="background:#262626; color:#fff; padding:8px; border-radius:6px; border:1px solid #444;">
+            <input type="text" id="postCaptionInput" placeholder="Write a caption...">
+            <div class="modal-btns">
+                <button class="btn-cancel" onclick="closePostModal()">Cancel</button>
+                <button class="btn-post" onclick="createNewPost()">Share</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = JSON.parse(localStorage.getItem('satish_current_user'));
+        let isSignupPopup = false;
+
+        updateTopAuthUI();
+        initApp();
+
+        function updateTopAuthUI() {
+            const btn = document.getElementById('topAuthBtn');
+            const userDisplay = document.getElementById('topUserDisplay');
+            if (currentUser) {
+                btn.innerText = "Log Out";
+                btn.onclick = logout;
+                userDisplay.innerText = "@" + currentUser.username;
+            } else {
+                btn.innerText = "Log In";
+                btn.onclick = openAuthModal;
+                userDisplay.innerText = "";
+            }
+        }
+
+        function openAuthModal() { document.getElementById('authModal').style.display = 'flex'; }
+        function closeAuthModal() { document.getElementById('authModal').style.display = 'none'; }
+
+        function switchAuthModalMode() {
+            isSignupPopup = !isSignupPopup;
+            const title = document.getElementById('authModalTitle');
+            const extraFields = document.getElementById('signupExtraFields');
+            const submitBtn = document.getElementById('authSubmitBtn');
+            const switchText = document.getElementById('authSwitchText');
+
+            if (isSignupPopup) {
+                title.innerText = "Create Account";
+                extraFields.style.display = "block";
+                submitBtn.innerText = "Register";
+                submitBtn.onclick = processSignup;
+                switchText.innerText = "Have an account? Log In";
+            } else {
+                title.innerText = "Log In";
+                extraFields.style.display = "none";
+                submitBtn.innerText = "Log In";
+                submitBtn.onclick = processLogin;
+                switchText.innerText = "Don't have an account? Sign up";
+            }
+        }
+
+        function processSignup() {
+            const name = document.getElementById('signName').value.trim();
+            const phone = document.getElementById('signPhone').value.trim();
+            const username = document.getElementById('authUsernameInput').value.trim();
+            const password = document.getElementById('authPasswordInput').value.trim();
+
+            if (!name || !phone || !username || !password) {
+                alert("Please fill all fields!");
+                return;
+            }
+
+            let users = JSON.parse(localStorage.getItem('satish_all_users')) || [];
+            if (users.some(u => u.username === username || u.phone === phone)) {
+                alert("Username or Phone already exists!");
+                return;
+            }
+
+            let newUser = {
+                name, phone, username, password,
+                profilePic: "https://picsum.photos/100/100?random=" + Math.floor(Math.random() * 100)
+            };
+
+            users.push(newUser);
+            localStorage.setItem('satish_all_users', JSON.stringify(users));
+            alert("Registration successful! Now please log in.");
+            switchAuthModalMode();
+        }
+
+        function processLogin() {
+            const userIn = document.getElementById('authUsernameInput').value.trim();
+            const passIn = document.getElementById('authPasswordInput').value.trim();
+
+            if (!userIn || !passIn) {
+                alert("Please enter username/phone and password!");
+                return;
+            }
+
+            if ((userIn === "satish" || userIn === "9999999999") && passIn === "1234") {
+                currentUser = { name: "Satish Meena", phone: "9999999999", username: "satish_meena", profilePic: "https://picsum.photos/100/100?random=1" };
+            } else {
+                let users = JSON.parse(localStorage.getItem('satish_all_users')) || [];
+                currentUser = users.find(u => (u.username === userIn || u.phone === userIn) && u.password === passIn);
+            }
+
+            if (currentUser) {
+                localStorage.setItem('satish_current_user', JSON.stringify(currentUser));
+                closeAuthModal();
+                updateTopAuthUI();
+                initApp();
+            } else {
+                alert("Invalid credentials! Please register first.");
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('satish_current_user');
+            currentUser = null;
+            updateTopAuthUI();
+            switchTab('home');
+            initApp();
+        }
+
+        // Instagram Reel Downloader simulation tool
+        function downloadIgReel() {
+            const link = document.getElementById('igLinkInput').value.trim();
+            const resultDiv = document.getElementById('downloadResult');
+            if (!link.includes('instagram.com')) {
+                resultDiv.innerHTML = "<span style='color:#ff3040;'>Please enter a valid Instagram URL!</span>";
+                return;
+            }
+            resultDiv.innerHTML = "Processing link... fetching media...";
+            setTimeout(() => {
+                resultDiv.innerHTML = `<span style='color:#4CAF50;'>✓ Success! <a href="${link}" target="_blank" style="color:#0095f6; font-weight:bold;">Click here to open/download media</a></span>`;
+            }, 1200);
+        }
+
+        let posts = JSON.parse(localStorage.getItem('satish_posts')) || [];
+        let stories = [
+            { username: "Naitik_mewal", pic: "https://picsum.photos/100/100?random=2" },
+            { username: "no_signal", pic: "https://picsum.photos/100/100?random=3" },
+            { username: "mahi_sulaniya", pic: "https://picsum.photos/100/100?random=4" }
+        ];
+
+        function saveData() {
+            localStorage.setItem('satish_posts', JSON.stringify(posts));
+        }
+
+        function initApp() {
+            renderFeed();
+            renderStories();
+        }
+
+        function renderStories() {
+            let pic = currentUser ? currentUser.profilePic : "https://picsum.photos/100/100?random=1";
+            let name = currentUser ? currentUser.username : "Your Story";
+            let html = `<div class="story"><img src="${pic}" alt=""><span>${name}</span></div>`;
+            stories.forEach(s => {
+                html += `<div class="story"><img src="${s.pic}" alt=""><span>${s.username}</span></div>`;
+            });
+            document.getElementById('storiesContainer').innerHTML = html;
+        }
+
+        function renderFeed() {
+            let html = '';
+            if (posts.length === 0) {
+                html = `<div style="text-align:center; padding:30px; color:#777;">No posts yet. Log in and click + to upload from your gallery!</div>`;
+            }
+            posts.forEach((post, index) => {
+                let commentsHTML = '';
+                post.comments.forEach(c => {
+                    commentsHTML += `<div class="comment-item"><strong>${c.user}:</strong> ${c.text}</div>`;
+                });
+
+                let isLiked = currentUser && post.likedBy.includes(currentUser.username);
+                let mediaHTML = post.type === 'reel' ? `<video src="${post.media}" controls loop></video>` : `<img src="${post.media}" alt="Post">`;
+
+                html += `
+                <div class="post">
+                    <div class="post-header">
+                        <img src="${post.userPic}" alt="">
+                        <span>${post.username}</span>
+                        <button class="follow-btn" onclick="toggleFollow(this)">Follow</button>
+                    </div>
+                    <div class="post-media" ondblclick="doubleTapLike(${index})">
+                        ${mediaHTML}
+                        <i class="fa-solid fa-heart big-heart" id="heart-${index}"></i>
+                    </div>
+                    <div class="post-actions">
+              
