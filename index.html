@@ -8,11 +8,12 @@
     <style>
         body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #000; color: #fff; padding-bottom: 70px; }
         
-        /* Auth Screen (Login / Signup) */
-        #authScreen { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #000; padding: 20px; text-align: center; position: fixed; top: 0; left: 0; width: 100%; z-index: 2000; }
+        /* Auth Screen (Login / Register) */
+        #authScreen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; background: #000; padding: 20px; text-align: center; position: fixed; top: 0; left: 0; width: 100%; z-index: 2000; box-sizing: border-box; }
         .auth-box { width: 100%; max-width: 350px; border: 1px solid #262626; padding: 30px 20px; border-radius: 8px; background: #000; }
-        .auth-box h1 { font-family: cursive; margin-bottom: 25px; font-size: 32px; color: #fff; }
-        .auth-box input { width: 100%; padding: 12px; margin-bottom: 10px; background: #121212; border: 1px solid #333; color: #fff; border-radius: 5px; outline: none; box-sizing: border-box; }
+        .auth-box h1 { font-family: cursive; margin-bottom: 5px; font-size: 32px; color: #fff; }
+        .auth-box p { color: #0095f6; font-size: 12px; margin-bottom: 25px; font-weight: bold; letter-spacing: 1px; }
+        .auth-box input { width: 100%; padding: 12px; margin-bottom: 10px; background: #121212; border: 1px solid #333; color: #fff; border-radius: 5px; outline: none; box-sizing: border-box; font-size: 14px; }
         .auth-box button { width: 100%; padding: 10px; background: #0095f6; color: white; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 15px; }
         .auth-switch { margin-top: 15px; font-size: 14px; color: #aaa; cursor: pointer; }
         .auth-switch span { color: #0095f6; font-weight: bold; }
@@ -28,7 +29,11 @@
         .story { display: flex; flex-direction: column; align-items: center; gap: 5px; font-size: 12px; cursor: pointer; flex-shrink: 0; }
         .story img { width: 65px; height: 65px; border-radius: 50%; border: 3px solid transparent; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888) border-box; -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0); mask-composite: exclude; padding: 2px; object-fit: cover; }
 
-        /* Posts */
+        /* Content Views */
+        .view-section { display: none; }
+        .view-section.active { display: block; }
+
+        /* Posts & Reels */
         .post { margin-bottom: 20px; border-bottom: 1px solid #262626; padding-bottom: 15px; }
         .post-header { display: flex; align-items: center; padding: 10px 15px; gap: 10px; }
         .post-header img { width: 35px; height: 35px; border-radius: 50%; object-fit: cover; }
@@ -37,7 +42,7 @@
         .follow-btn.following { background-color: #262626; }
 
         .post-media { position: relative; width: 100%; max-height: 550px; background: #111; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .post-media img { width: 100%; max-height: 550px; object-fit: cover; }
+        .post-media img, .post-media video { width: 100%; max-height: 550px; object-fit: cover; }
         
         .big-heart { position: absolute; color: white; font-size: 80px; opacity: 0; transform: scale(0); transition: all 0.3s ease-out; pointer-events: none; }
         .big-heart.animate { opacity: 0.9; transform: scale(1.2); }
@@ -49,17 +54,25 @@
         .post-caption span { color: #0095f6; }
 
         /* Comments */
-        .comments-section { padding: 0 15px; font-size: 13px; }
+        .comments-section { padding: 0 15px; font-size: 13px; max-height: 100px; overflow-y: auto; }
         .comment-item { margin-bottom: 3px; }
         .add-comment-box { display: flex; padding: 8px 15px; gap: 10px; margin-top: 8px; }
         .add-comment-box input { flex: 1; background: #121212; border: 1px solid #333; color: white; padding: 8px; border-radius: 6px; outline: none; font-size: 13px; }
         .add-comment-box button { background: none; border: none; color: #0095f6; font-weight: bold; cursor: pointer; }
 
+        /* Profile View Styling */
+        .profile-header { display: flex; align-items: center; padding: 20px; gap: 20px; border-bottom: 1px solid #262626; }
+        .profile-header img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 2px solid #ff9800; }
+        .profile-info h2 { margin: 0 0 5px 0; font-size: 18px; }
+        .profile-info p { margin: 0; color: #aaa; font-size: 13px; }
+        .profile-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px; padding: 2px; }
+        .profile-grid img, .profile-grid video { width: 100%; height: 120px; object-fit: cover; }
+
         /* Modals */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 3000; align-items: center; justify-content: center; }
         .modal-content { background: #1c1c1c; padding: 20px; border-radius: 12px; width: 90%; max-width: 400px; display: flex; flex-direction: column; gap: 12px; }
         .modal-content h3 { margin: 0 0 10px 0; color: #fff; }
-        .modal-content input { padding: 10px; background: #262626; border: 1px solid #444; color: #fff; border-radius: 6px; outline: none; }
+        .modal-content input, .modal-content select { padding: 10px; background: #262626; border: 1px solid #444; color: #fff; border-radius: 6px; outline: none; width: 100%; box-sizing: border-box; }
         .modal-btns { display: flex; justify-content: flex-end; gap: 10px; margin-top: 10px; }
         .modal-btns button { padding: 8px 16px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; }
         .btn-cancel { background: #333; color: #fff; }
@@ -67,22 +80,24 @@
 
         /* Bottom Nav */
         .bottom-nav { display: flex; justify-content: space-around; align-items: center; padding: 12px 0; position: fixed; bottom: 0; width: 100%; background-color: #000; border-top: 1px solid #262626; font-size: 22px; z-index: 100; }
-        .bottom-nav i { cursor: pointer; }
+        .bottom-nav i { cursor: pointer; color: #888; }
+        .bottom-nav i.active-tab { color: #fff; }
         .liked { color: #ff3040 !important; }
     </style>
 </head>
 <body>
 
-    <!-- AUTH SCREEN (LOGIN / SIGNUP) -->
+    <!-- AUTH SCREEN (REGISTER / LOGIN) -->
     <div id="authScreen">
         <div class="auth-box">
             <h1>Satish Meena</h1>
+            <p>PREMIUM INSTAGRAM</p>
             <div id="formContainer">
                 <!-- Login Form by default -->
-                <input type="text" id="authUsername" placeholder="Username">
+                <input type="text" id="authPhoneOrUser" placeholder="Phone number or Username">
                 <input type="password" id="authPassword" placeholder="Password">
-                <button onclick="handleAuth()">Log In</button>
-                <div class="auth-switch" onclick="switchMode()">Don't have an account? <span>Sign up</span></div>
+                <button onclick="handleLogin()">Log In</button>
+                <div class="auth-switch" onclick="switchAuthMode()">Don't have an account? <span>Sign up with Phone</span></div>
             </div>
         </div>
     </div>
@@ -96,97 +111,145 @@
                 <span class="badge">PREMIUM EDITION</span>
             </div>
             <div class="icons">
-                <i class="fa-regular fa-square-plus" onclick="openPostModal()" title="Create Post"></i>
+                <i class="fa-regular fa-square-plus" onclick="openPostModal()" title="Create Post/Reel"></i>
                 <i class="fa-solid fa-right-from-bracket" onclick="logout()" title="Log Out"></i>
             </div>
         </div>
 
-        <!-- Stories Container -->
-        <div class="stories" id="storiesContainer"></div>
+        <!-- HOME FEED VIEW -->
+        <div id="homeView" class="view-section active">
+            <!-- Stories Container -->
+            <div class="stories" id="storiesContainer"></div>
+            <!-- Feed Container -->
+            <div id="feedContainer"></div>
+        </div>
 
-        <!-- Feed Container -->
-        <div id="feedContainer"></div>
+        <!-- PROFILE VIEW -->
+        <div id="profileView" class="view-section">
+            <div class="profile-header">
+                <img id="profileUserPic" src="" alt="Profile">
+                <div class="profile-info">
+                    <h2 id="profileUsername"></h2>
+                    <p id="profilePhone"></p>
+                </div>
+            </div>
+            <div style="padding: 10px 15px; font-weight: bold; font-size: 14px;">My Posts & Reels</div>
+            <div class="profile-grid" id="profileGrid"></div>
+        </div>
+
+        <!-- BOTTOM NAVIGATION -->
+        <div class="bottom-nav">
+            <i class="fa-solid fa-house active-tab" id="navHome" onclick="switchTab('home')"></i>
+            <i class="fa-solid fa-magnifying-glass" id="navSearch" onclick="switchTab('search')"></i>
+            <i class="fa-regular fa-square-plus" onclick="openPostModal()"></i>
+            <i class="fa-solid fa-clapperboard" id="navReels" onclick="switchTab('reels')"></i>
+            <i class="fa-regular fa-user" id="navProfile" onclick="switchTab('profile')"></i>
+        </div>
     </div>
 
-    <!-- Create Post Modal -->
+    <!-- Create Post / Reel Modal -->
     <div class="modal" id="postModal">
         <div class="modal-content">
-            <h3>Create New Post</h3>
-            <input type="text" id="postImageInput" placeholder="Image URL (e.g. https://...)">
+            <h3>Create Post or Reel</h3>
+            <select id="postTypeInput">
+                <option value="image">Photo Post</option>
+                <option value="reel">Reel (Video URL)</option>
+            </select>
+            <input type="text" id="postMediaInput" placeholder="Media URL (Image or Video link)">
             <input type="text" id="postCaptionInput" placeholder="Write a caption...">
             <div class="modal-btns">
                 <button class="btn-cancel" onclick="closePostModal()">Cancel</button>
-                <button class="btn-post" onclick="addNewPost()">Post</button>
+                <button class="btn-post" onclick="createNewPost()">Share</button>
             </div>
         </div>
     </div>
 
     <script>
-        let isSignupMode = false;
-        let currentUser = localStorage.getItem('satish_current_user');
+        let isSignup = false;
+        let currentUser = JSON.parse(localStorage.getItem('satish_current_user'));
 
-        // Check if user is already logged in
+        // Check login state on load
         if (currentUser) {
             document.getElementById('authScreen').style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
+            initApp();
         }
 
-        // Switch between Login and Signup form UI
-        function switchMode() {
-            isSignupMode = !isSignupMode;
+        function switchAuthMode() {
+            isSignup = !isSignup;
             const container = document.getElementById('formContainer');
-            if (isSignupMode) {
+            if (isSignup) {
                 container.innerHTML = `
-                    <input type="text" id="authUsername" placeholder="Choose Username">
-                    <input type="password" id="authPassword" placeholder="Create Password">
-                    <button onclick="handleAuth()">Sign Up</button>
-                    <div class="auth-switch" onclick="switchMode()">Have an account? <span>Log In</span></div>
+                    <input type="text" id="regName" placeholder="Full Name">
+                    <input type="text" id="regPhone" placeholder="Mobile Number (for registration)">
+                    <input type="text" id="regUsername" placeholder="Choose Username">
+                    <input type="password" id="regPassword" placeholder="Create Password">
+                    <input type="text" id="regPic" placeholder="Profile Picture URL (optional)">
+                    <button onclick="handleRegister()">Register / Sign Up</button>
+                    <div class="auth-switch" onclick="switchAuthMode()">Have an account? <span>Log In</span></div>
                 `;
             } else {
                 container.innerHTML = `
-                    <input type="text" id="authUsername" placeholder="Username">
+                    <input type="text" id="authPhoneOrUser" placeholder="Phone number or Username">
                     <input type="password" id="authPassword" placeholder="Password">
-                    <button onclick="handleAuth()">Log In</button>
-                    <div class="auth-switch" onclick="switchMode()">Don't have an account? <span>Sign up</span></div>
+                    <button onclick="handleLogin()">Log In</button>
+                    <div class="auth-switch" onclick="switchAuthMode()">Don't have an account? <span>Sign up with Phone</span></div>
                 `;
             }
         }
 
-        // Handle Login & Signup logic
-        function handleAuth() {
-            const username = document.getElementById('authUsername').value.trim();
-            const password = document.getElementById('authPassword').value.trim();
+        function handleRegister() {
+            const name = document.getElementById('regName').value.trim();
+            const phone = document.getElementById('regPhone').value.trim();
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+            let pic = document.getElementById('regPic').value.trim();
 
-            if(!username || !password) {
-                alert("Please fill all fields!");
+            if (!name || !phone || !username || !password) {
+                alert("Please fill all required fields!");
                 return;
             }
 
-            let users = JSON.parse(localStorage.getItem('satish_users')) || [];
+            if(!pic) {
+                pic = "https://picsum.photos/100/100?random=" + Math.floor(Math.random() * 100);
+            }
 
-            if (isSignupMode) {
-                // Check if user already exists
-                let existing = users.find(u => u.username === username);
-                if(existing) {
-                    alert("Username already exists! Try another.");
-                    return;
-                }
-                users.push({ username, password });
-                localStorage.setItem('satish_users', JSON.stringify(users));
-                alert("Account created successfully! Please log in.");
-                switchMode();
+            let users = JSON.parse(localStorage.getItem('satish_all_users')) || [];
+            
+            // Check if username or phone already exists
+            if (users.some(u => u.username === username || u.phone === phone)) {
+                alert("Username or Phone number already registered!");
+                return;
+            }
+
+            const newUser = { name, phone, username, password, profilePic: pic };
+            users.push(newUser);
+            localStorage.setItem('satish_all_users', JSON.stringify(users));
+
+            alert("Registration successful! Now please log in with your phone or username.");
+            switchAuthMode();
+        }
+
+        function handleLogin() {
+            const inputVal = document.getElementById('authPhoneOrUser').value.trim();
+            const password = document.getElementById('authPassword').value.trim();
+
+            let users = JSON.parse(localStorage.getItem('satish_all_users')) || [];
+
+            // Default master user check
+            if ((inputVal === "satish" || inputVal === "9999999999") && password === "1234") {
+                currentUser = { name: "Satish Meena", phone: "9999999999", username: "satish_meena", profilePic: "https://picsum.photos/100/100?random=1" };
             } else {
-                // Login check
-                let validUser = users.find(u => u.username === username && u.password === password);
-                // Allow default or newly signed up users
-                if (validUser || (username === "satish" && password === "1234")) {
-                    localStorage.setItem('satish_current_user', username);
-                    document.getElementById('authScreen').style.display = 'none';
-                    document.getElementById('mainApp').style.display = 'block';
-                    renderApp();
-                } else {
-                    alert("Invalid Username or Password! (Hint: Sign up first)");
-                }
+                currentUser = users.find(u => (u.username === inputVal || u.phone === inputVal) && u.password === password);
+            }
+
+            if (currentUser) {
+                localStorage.setItem('satish_current_user', JSON.stringify(currentUser));
+                document.getElementById('authScreen').style.display = 'none';
+                document.getElementById('mainApp').style.display = 'block';
+                initApp();
+            } else {
+                alert("Invalid credentials or account not found! Please register first.");
             }
         }
 
@@ -195,48 +258,63 @@
             location.reload();
         }
 
-        // App Data Storage
+        // Global Database for Posts and Stories
         let posts = JSON.parse(localStorage.getItem('satish_posts')) || [
             {
-                username: "satish_meena_official",
+                id: 1,
+                username: "satish_meena",
                 userPic: "https://picsum.photos/50/50?random=10",
+                type: "image",
                 media: "https://picsum.photos/600/600?random=11",
-                caption: "Welcome to my premium space! 🔥 #satishmeena #premium",
-                likes: 1420,
-                isLiked: false,
-                comments: ["Awesome look!", "🔥 Bro rocking!"]
+                caption: "Welcome to Satish Meena Premium Feed! 🔥 #satishmeena",
+                likes: 1250,
+                likedBy: [],
+                comments: ["Amazing setup!", "🔥 Awesome!"]
             }
         ];
 
-        let stories = [
-            { name: "Vkeel", pic: "https://picsum.photos/100/100?random=2" },
-            { name: "Awani", pic: "https://picsum.photos/100/100?random=3" },
-            { name: "Naitik", pic: "https://picsum.photos/100/100?random=4" },
-            { name: "Hardik", pic: "https://picsum.photos/100/100?random=5" }
+        let stories = JSON.parse(localStorage.getItem('satish_stories')) || [
+            { username: "Vkeel", pic: "https://picsum.photos/100/100?random=2" },
+            { username: "Awani", pic: "https://picsum.photos/100/100?random=3" }
         ];
 
         function saveData() {
             localStorage.setItem('satish_posts', JSON.stringify(posts));
+            localStorage.setItem('satish_stories', JSON.stringify(stories));
         }
 
-        function renderApp() {
-            // Render Stories
-            let activeUser = localStorage.getItem('satish_current_user') || "You";
-            let storiesHTML = `<div class="story"><img src="https://picsum.photos/100/100?random=1" alt="Add"><span>${activeUser}</span></div>`;
-            stories.forEach(s => {
-                storiesHTML += `<div class="story"><img src="${s.pic}" alt=""><span>${s.name}</span></div>`;
-            });
-            document.getElementById('storiesContainer').innerHTML = storiesHTML;
+        function initApp() {
+            renderFeed();
+            renderStories();
+            renderProfile();
+        }
 
-            // Render Posts
-            let feedHTML = '';
+        function renderStories() {
+            let html = `<div class="story"><img src="${currentUser.profilePic}" alt=""><span>Your Story</span></div>`;
+            stories.forEach(s => {
+                html += `<div class="story"><img src="${s.pic}" alt=""><span>${s.username}</span></div>`;
+            });
+            document.getElementById('storiesContainer').innerHTML = html;
+        }
+
+        function renderFeed() {
+            let html = '';
             posts.forEach((post, index) => {
                 let commentsHTML = '';
                 post.comments.forEach(c => {
-                    commentsHTML += `<div class="comment-item"><strong>user:</strong> ${c}</div>`;
+                    commentsHTML += `<div class="comment-item"><strong>${c.user}:</strong> ${c.text}</div>`;
                 });
 
-                feedHTML += `
+                let isLiked = post.likedBy.includes(currentUser.username);
+
+                let mediaHTML = '';
+                if(post.type === 'reel') {
+                    mediaHTML = `<video src="${post.media}" controls loop></video>`;
+                } else {
+                    mediaHTML = `<img src="${post.media}" alt="Post">`;
+                }
+
+                html += `
                 <div class="post">
                     <div class="post-header">
                         <img src="${post.userPic}" alt="">
@@ -244,12 +322,12 @@
                         <button class="follow-btn" onclick="toggleFollow(this)">Follow</button>
                     </div>
                     <div class="post-media" ondblclick="doubleTapLike(${index})">
-                        <img src="${post.media}" alt="Post">
+                        ${mediaHTML}
                         <i class="fa-solid fa-heart big-heart" id="heart-${index}"></i>
                     </div>
                     <div class="post-actions">
                         <div class="left">
-                            <i class="${post.isLiked ? 'fa-solid fa-heart liked' : 'fa-regular fa-heart'}" onclick="toggleLike(${index})"></i>
+                            <i class="${isLiked ? 'fa-solid fa-heart liked' : 'fa-regular fa-heart'}" onclick="toggleLike(${index})"></i>
                             <i class="fa-regular fa-comment"></i>
                             <i class="fa-regular fa-paper-plane"></i>
                         </div>
@@ -257,53 +335,56 @@
                     </div>
                     <div class="post-likes">${post.likes} likes</div>
                     <div class="post-caption"><strong>${post.username}</strong> ${post.caption}</div>
-                    <div class="comments-section" id="comments-${index}">${commentsHTML}</div>
+                    <div class="comments-section">${commentsHTML}</div>
                     <div class="add-comment-box">
                         <input type="text" id="comment-input-${index}" placeholder="Add a comment...">
                         <button onclick="addComment(${index})">Post</button>
                     </div>
                 </div>`;
             });
-            document.getElementById('feedContainer').innerHTML = feedHTML;
+            document.getElementById('feedContainer').innerHTML = html;
         }
 
         function toggleLike(index) {
-            if (posts[index].isLiked) {
-                posts[index].isLiked = false;
-                posts[index].likes--;
+            let post = posts[index];
+            let userIdx = post.likedBy.indexOf(currentUser.username);
+            if(userIdx > -1) {
+                post.likedBy.splice(userIdx, 1);
+                post.likes--;
             } else {
-                posts[index].isLiked = true;
-                posts[index].likes++;
+                post.likedBy.push(currentUser.username);
+                post.likes++;
             }
             saveData();
-            renderApp();
+            renderFeed();
         }
 
         function doubleTapLike(index) {
-            if (!posts[index].isLiked) {
-                posts[index].isLiked = true;
-                posts[index].likes++;
+            let post = posts[index];
+            if(!post.likedBy.includes(currentUser.username)) {
+                post.likedBy.push(currentUser.username);
+                post.likes++;
+                saveData();
+                renderFeed();
             }
-            saveData();
-            renderApp();
-            
             const heart = document.getElementById(`heart-${index}`);
-            heart.classList.add('animate');
-            setTimeout(() => { heart.classList.remove('animate'); }, 800);
+            if(heart) {
+                heart.classList.add('animate');
+                setTimeout(() => { heart.classList.remove('animate'); }, 800);
+            }
         }
 
         function addComment(index) {
             const input = document.getElementById(`comment-input-${index}`);
-            let activeUser = localStorage.getItem('satish_current_user') || "user";
-            if (input.value.trim() !== "") {
-                posts[index].comments.push(`${activeUser}: ${input.value}`);
+            if(input.value.trim() !== "") {
+                posts[index].comments.push({ user: currentUser.username, text: input.value.trim() });
                 saveData();
-                renderApp();
+                renderFeed();
             }
         }
 
         function toggleFollow(btn) {
-            if (btn.innerText === "Follow") {
+            if(btn.innerText === "Follow") {
                 btn.innerText = "Following";
                 btn.classList.add("following");
             } else {
@@ -312,34 +393,76 @@
             }
         }
 
-        function openPostModal() { document.getElementById('postModal').style.display = 'flex'; }
-        function closePostModal() { document.getElementById('postModal').style.display = 'none'; }
+        function renderProfile() {
+            document.getElementById('profileUserPic').src = currentUser.profilePic;
+            document.getElementById('profileUsername').innerText = currentUser.username;
+            document.getElementById('profilePhone').innerText = "📱 Phone: " + currentUser.phone;
 
-        function addNewPost() {
-            c;
-            const caption = document.getElementById('postCaptionInput').value;
-            let activeUser = localStorage.getItem('satish_current_user') || "satish_meena";
-            if(img) {
-                posts.unshift({
-                    username: activeUser,
-                    userPic: "https://picsum.photos/50/50?random=12",
-                    media: img,
-                    caption: caption || "New premium post ✨",
-                    likes: 1,
-                    isLiked: false,
-                    comments: []
-                });
-                saveData();
-                renderApp();
-                closePostModal();
-                document.getElementById('postImageInput').value = '';
-                document.getElementById('postCaptionInput').value = '';
+            let myPosts = posts.filter(p => p.username === currentUser.username);
+            let gridHtml = '';
+            myPosts.forEach(p => {
+                if(p.type === 'reel') {
+                    gridHtml += `<video src="${p.media}"></video>`;
+                } else {
+                    gridHtml += `<img src="${p.media}" alt="Grid Post">`;
+                }
+            });
+            document.getElementById('profileGrid').innerHTML = gridHtml || `<div style="grid-column: span 3; text-align:center; padding:30px; color:#777;">No posts or reels yet</div>`;
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.bottom-nav i').forEach(el => el.classList.remove('active-tab'));
+
+            if(tab === 'home') {
+                document.getElementById('homeView').classList.add('active');
+                document.getElementById('navHome').classList.add('active-tab');
+            } else if(tab === 'profile') {
+                document.getElementById('profileView').classList.add('active');
+                document.getElementById('navProfile').classList.add('active-tab');
+                renderProfile();
+            } else if(tab === 'reels') {
+                document.getElementById('homeView').classList.add('active');
+                document.getElementById('navReels').classList.add('active-tab');
+            } else {
+                document.getElementById('homeView').classList.add('active');
             }
         }
 
-        // Run render if already logged in on load
-        if(currentUser) {
-            renderApp();
+        // Modal Controls
+        function openPostModal() { document.getElementById('postModal').style.display = 'flex'; }
+        function closePostModal() { document.getElementById('postModal').style.display = 'none'; }
+
+        function createNewPost() {
+            const type = document.getElementById('postTypeInput').value;
+            const media = document.getElementById('postMediaInput').value.trim();
+            const caption = document.getElementById('postCaptionInput').value.trim();
+
+            if(!media) {
+                alert("Please provide a media URL (image or video link)!");
+                return;
+            }
+
+            const newPost = {
+                id: Date.now(),
+                username: currentUser.username,
+                userPic: currentUser.profilePic,
+                type: type,
+                media: media,
+                caption: caption || "My new post ✨",
+                likes: 0,
+                likedBy: [],
+                comments: []
+            };
+
+            posts.unshift(newPost);
+            saveData();
+            closePostModal();
+            initApp();
+            switchTab('home');
+
+            document.getElementById('postMediaInput').value = '';
+            document.getElementById('postCaptionInput').value = '';
         }
     </script>
 </body>
