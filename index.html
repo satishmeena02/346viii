@@ -8,7 +8,7 @@
     <style>
         body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #000; color: #fff; padding-bottom: 70px; }
         
-        /* Auth Screen (Login / Register) */
+        /* Auth Screen (Register / Login) */
         #authScreen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; background: #000; padding: 20px; text-align: center; position: fixed; top: 0; left: 0; width: 100%; z-index: 2000; box-sizing: border-box; }
         .auth-box { width: 100%; max-width: 350px; border: 1px solid #262626; padding: 30px 20px; border-radius: 8px; background: #000; }
         .auth-box h1 { font-family: cursive; margin-bottom: 5px; font-size: 32px; color: #fff; }
@@ -93,7 +93,6 @@
             <h1>Satish Meena</h1>
             <p>PREMIUM INSTAGRAM</p>
             <div id="formContainer">
-                <!-- Login Form by default -->
                 <input type="text" id="authPhoneOrUser" placeholder="Phone number or Username">
                 <input type="password" id="authPassword" placeholder="Password">
                 <button onclick="handleLogin()">Log In</button>
@@ -118,9 +117,7 @@
 
         <!-- HOME FEED VIEW -->
         <div id="homeView" class="view-section active">
-            <!-- Stories Container -->
             <div class="stories" id="storiesContainer"></div>
-            <!-- Feed Container -->
             <div id="feedContainer"></div>
         </div>
 
@@ -147,15 +144,15 @@
         </div>
     </div>
 
-    <!-- Create Post / Reel Modal -->
+    <!-- Create Post / Reel Modal with File Upload -->
     <div class="modal" id="postModal">
         <div class="modal-content">
-            <h3>Create Post or Reel</h3>
+            <h3>Upload from Gallery</h3>
             <select id="postTypeInput">
                 <option value="image">Photo Post</option>
-                <option value="reel">Reel (Video URL)</option>
+                <option value="reel">Reel (Video)</option>
             </select>
-            <input type="text" id="postMediaInput" placeholder="Media URL (Image or Video link)">
+            <input type="file" id="postMediaFile" accept="image/*,video/*" style="background:#262626; color:#fff; padding:8px; border-radius:6px; border:1px solid #444;">
             <input type="text" id="postCaptionInput" placeholder="Write a caption...">
             <div class="modal-btns">
                 <button class="btn-cancel" onclick="closePostModal()">Cancel</button>
@@ -168,7 +165,6 @@
         let isSignup = false;
         let currentUser = JSON.parse(localStorage.getItem('satish_current_user'));
 
-        // Check login state on load
         if (currentUser) {
             document.getElementById('authScreen').style.display = 'none';
             document.getElementById('mainApp').style.display = 'block';
@@ -181,10 +177,9 @@
             if (isSignup) {
                 container.innerHTML = `
                     <input type="text" id="regName" placeholder="Full Name">
-                    <input type="text" id="regPhone" placeholder="Mobile Number (for registration)">
+                    <input type="text" id="regPhone" placeholder="Mobile Number">
                     <input type="text" id="regUsername" placeholder="Choose Username">
                     <input type="password" id="regPassword" placeholder="Create Password">
-                    <input type="text" id="regPic" placeholder="Profile Picture URL (optional)">
                     <button onclick="handleRegister()">Register / Sign Up</button>
                     <div class="auth-switch" onclick="switchAuthMode()">Have an account? <span>Log In</span></div>
                 `;
@@ -203,30 +198,24 @@
             const phone = document.getElementById('regPhone').value.trim();
             const username = document.getElementById('regUsername').value.trim();
             const password = document.getElementById('regPassword').value.trim();
-            let pic = document.getElementById('regPic').value.trim();
 
             if (!name || !phone || !username || !password) {
                 alert("Please fill all required fields!");
                 return;
             }
 
-            if(!pic) {
-                pic = "https://picsum.photos/100/100?random=" + Math.floor(Math.random() * 100);
-            }
-
             let users = JSON.parse(localStorage.getItem('satish_all_users')) || [];
-            
-            // Check if username or phone already exists
             if (users.some(u => u.username === username || u.phone === phone)) {
                 alert("Username or Phone number already registered!");
                 return;
             }
 
+            const pic = "https://picsum.photos/100/100?random=" + Math.floor(Math.random() * 100);
             const newUser = { name, phone, username, password, profilePic: pic };
             users.push(newUser);
             localStorage.setItem('satish_all_users', JSON.stringify(users));
 
-            alert("Registration successful! Now please log in with your phone or username.");
+            alert("Registration successful! Please log in.");
             switchAuthMode();
         }
 
@@ -236,7 +225,6 @@
 
             let users = JSON.parse(localStorage.getItem('satish_all_users')) || [];
 
-            // Default master user check
             if ((inputVal === "satish" || inputVal === "9999999999") && password === "1234") {
                 currentUser = { name: "Satish Meena", phone: "9999999999", username: "satish_meena", profilePic: "https://picsum.photos/100/100?random=1" };
             } else {
@@ -249,7 +237,7 @@
                 document.getElementById('mainApp').style.display = 'block';
                 initApp();
             } else {
-                alert("Invalid credentials or account not found! Please register first.");
+                alert("Invalid credentials! Please register first.");
             }
         }
 
@@ -258,21 +246,7 @@
             location.reload();
         }
 
-        // Global Database for Posts and Stories
-        let posts = JSON.parse(localStorage.getItem('satish_posts')) || [
-            {
-                id: 1,
-                username: "satish_meena",
-                userPic: "https://picsum.photos/50/50?random=10",
-                type: "image",
-                media: "https://picsum.photos/600/600?random=11",
-                caption: "Welcome to Satish Meena Premium Feed! 🔥 #satishmeena",
-                likes: 1250,
-                likedBy: [],
-                comments: ["Amazing setup!", "🔥 Awesome!"]
-            }
-        ];
-
+        let posts = JSON.parse(localStorage.getItem('satish_posts')) || [];
         let stories = JSON.parse(localStorage.getItem('satish_stories')) || [
             { username: "Vkeel", pic: "https://picsum.photos/100/100?random=2" },
             { username: "Awani", pic: "https://picsum.photos/100/100?random=3" }
@@ -299,6 +273,9 @@
 
         function renderFeed() {
             let html = '';
+            if(posts.length === 0) {
+                html = `<div style="text-align:center; padding:40px; color:#777;">No posts yet. Click + to upload from your gallery!</div>`;
+            }
             posts.forEach((post, index) => {
                 let commentsHTML = '';
                 post.comments.forEach(c => {
@@ -306,13 +283,7 @@
                 });
 
                 let isLiked = post.likedBy.includes(currentUser.username);
-
-                let mediaHTML = '';
-                if(post.type === 'reel') {
-                    mediaHTML = `<video src="${post.media}" controls loop></video>`;
-                } else {
-                    mediaHTML = `<img src="${post.media}" alt="Post">`;
-                }
+                let mediaHTML = post.type === 'reel' ? `<video src="${post.media}" controls loop></video>` : `<img src="${post.media}" alt="Post">`;
 
                 html += `
                 <div class="post">
@@ -429,40 +400,49 @@
             }
         }
 
-        // Modal Controls
         function openPostModal() { document.getElementById('postModal').style.display = 'flex'; }
         function closePostModal() { document.getElementById('postModal').style.display = 'none'; }
 
+        // Gallery File Upload Logic using FileReader
         function createNewPost() {
             const type = document.getElementById('postTypeInput').value;
-            const media = document.getElementById('postMediaInput').value.trim();
+            const fileInput = document.getElementById('postMediaFile');
             const caption = document.getElementById('postCaptionInput').value.trim();
 
-            if(!media) {
-                alert("Please provide a media URL (image or video link)!");
+            if (fileInput.files.length === 0) {
+                alert("Please select a photo or video from your device!");
                 return;
             }
 
-            const newPost = {
-                id: Date.now(),
-                username: currentUser.username,
-                userPic: currentUser.profilePic,
-                type: type,
-                media: media,
-                caption: caption || "My new post ✨",
-                likes: 0,
-                likedBy: [],
-                comments: []
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const mediaBase64 = e.target.result;
+
+                const newPost = {
+                    id: Date.now(),
+                    username: currentUser.username,
+                    userPic: currentUser.profilePic,
+                    type: type,
+                    media: mediaBase64,
+                    caption: caption || "My new post ✨",
+                    likes: 0,
+                    likedBy: [],
+                    comments: []
+                };
+
+                posts.unshift(newPost);
+                saveData();
+                closePostModal();
+                initApp();
+                switchTab('home');
+
+                document.getElementById('postMediaFile').value = '';
+                document.getElementById('postCaptionInput').value = '';
             };
 
-            posts.unshift(newPost);
-            saveData();
-            closePostModal();
-            initApp();
-            switchTab('home');
-
-            document.getElementById('postMediaInput').value = '';
-            document.getElementById('postCaptionInput').value = '';
+            reader.readAsDataURL(file);
         }
     </script>
 </body>
