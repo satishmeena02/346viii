@@ -1,69 +1,219 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Satish Meena - Photo Gallery</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Gallery</title>
+    <!-- Icons ke liye FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Basic App Settings */
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
+            padding-bottom: 60px; /* Footer ke liye jagah */
+        }
 
-<style>
-body{
-margin:0;
-font-family:Arial,sans-serif;
-background:#111;
-color:#fff;
-text-align:center;
-}
+        /* Top Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            position: sticky;
+            top: 0;
+            background-color: #000;
+            z-index: 100;
+            border-bottom: 1px solid #262626;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-style: italic;
+        }
+        .header .icons i {
+            font-size: 22px;
+            margin-left: 15px;
+        }
 
-header{
-background:#0d6efd;
-padding:20px;
-}
+        /* Stories Section */
+        .stories {
+            display: flex;
+            padding: 15px 10px;
+            gap: 15px;
+            overflow-x: auto;
+            border-bottom: 1px solid #262626;
+            scrollbar-width: none; /* Scrollbar chupane ke liye */
+        }
+        .story {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            font-size: 12px;
+        }
+        .story img {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: destination-out;
+            mask-composite: exclude;
+            padding: 2px;
+            object-fit: cover;
+        }
 
-h1{
-margin:0;
-}
+        /* Post Feed */
+        .post {
+            margin-bottom: 15px;
+        }
+        .post-header {
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            gap: 10px;
+        }
+        .post-header img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .post-header span {
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .post-image img {
+            width: 100%;
+            height: auto;
+            max-height: 500px;
+            object-fit: cover;
+        }
 
-.gallery{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
-gap:15px;
-padding:20px;
-}
+        /* Post Actions (Like, Comment) */
+        .post-actions {
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 24px;
+        }
+        .post-actions .left i {
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        .post-likes {
+            padding: 0 15px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .post-caption {
+            padding: 5px 15px 15px 15px;
+            font-size: 14px;
+        }
 
-.gallery img{
-width:100%;
-height:220px;
-object-fit:cover;
-border-radius:12px;
-}
-
-footer{
-background:#000;
-padding:15px;
-margin-top:20px;
-}
-</style>
+        /* Bottom Navigation Bar */
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 15px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #000;
+            border-top: 1px solid #262626;
+            font-size: 24px;
+            z-index: 100;
+        }
+        
+        /* Like Animation Class */
+        .liked {
+            color: #ff3040;
+        }
+    </style>
 </head>
-
 <body>
 
-<header>
-<h1>📷 Satish Meena Gallery</h1>
-<p>Welcome to my photo gallery</p>
-</header>
+    <!-- Header -->
+    <div class="header">
+        <h1>Gallery</h1>
+        <div class="icons">
+            <i class="fa-regular fa-heart"></i>
+            <i class="fa-brands fa-facebook-messenger"></i>
+        </div>
+    </div>
 
-<div class="gallery">
-<img src="https://picsum.photos/300/400?1">
-<img src="https://picsum.photos/300/400?2">
-<img src="https://picsum.photos/300/400?3">
-<img src="https://picsum.photos/300/400?4">
-<img src="https://picsum.photos/300/400?5">
-<img src="https://picsum.photos/300/400?6">
-</div>
+    <!-- Stories -->
+    <div class="stories">
+        <div class="story">
+            <img src="https://picsum.photos/100/100?random=1" alt="Story">
+            <span>Your Story</span>
+        </div>
+        <div class="story">
+            <img src="https://picsum.photos/100/100?random=2" alt="Story">
+            <span>naitik</span>
+        </div>
+        <div class="story">
+            <img src="https://picsum.photos/100/100?random=3" alt="Story">
+            <span>kittu</span>
+        </div>
+        <div class="story">
+            <img src="https://picsum.photos/100/100?random=4" alt="Story">
+            <span>hardik</span>
+        </div>
+        <div class="story">
+            <img src="https://picsum.photos/100/100?random=5" alt="Story">
+            <span>arav</span>
+        </div>
+    </div>
 
-<footer>
-© 2026 Satish Meena
-</footer>
+    <!-- Feed Post 1 -->
+    <div class="post">
+        <div class="post-header">
+            <img src="https://picsum.photos/50/50?random=6" alt="Profile">
+            <span>no_signal_boy</span>
+        </div>
+        <div class="post-image">
+            <!-- Feed Image -->
+            <img src="https://picsum.photos/600/600?random=7" alt="Post">
+        </div>
+        <div class="post-actions">
+            <div class="left">
+                <!-- Javascript se heart red karne ke liye onclick lagaya hai -->
+                <i class="fa-regular fa-heart" onclick="toggleLike(this)"></i>
+                <i class="fa-regular fa-comment"></i>
+                <i class="fa-regular fa-paper-plane"></i>
+            </div>
+            <div class="right">
+                <i class="fa-regular fa-bookmark"></i>
+            </div>
+        </div>
+        <div class="post-likes">1,204 likes</div>
+        <div class="post-caption">
+            <strong>no_signal_boy</strong> New track dropping soon 🔥 #music #studio
+        </div>
+    </div>
 
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <i class="fa-solid fa-house"></i>
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <i class="fa-regular fa-square-plus"></i>
+        <i class="fa-solid fa-clapperboard"></i>
+        <i class="fa-regular fa-user"></i>
+    </div>
+
+    <!-- Like button ko tap karne par red karne wala chota sa script -->
+    <script>
+        function toggleLike(element) {
+            element.classList.toggle('fa-regular');
+            element.classList.toggle('fa-solid');
+            element.classList.toggle('liked');
+        }
+    </script>
 </body>
 </html>
